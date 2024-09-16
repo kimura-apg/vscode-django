@@ -29,13 +29,13 @@ export class DjangoCompletionItemProvider implements CompletionItemProvider {
     files: string[] = []
     snippets: DjangoSnippet[] = []
 
-    async loadSnippets(snippetPrvider: SnippetProvider) {
+    async loadSnippets(snippetProvider: SnippetProvider) {
         if (! settings.snippets.use) return
         if (exclusions.some(word => this.directory.includes(word))) return
 
         this.snippets = Array.prototype.concat(...await Promise.all(
             this.files.filter(file => ! exclusions.some(word => file.includes(word)))
-                .map(file => snippetPrvider.readSnippets(`${this.directory}/${file}`))
+                .map(file => snippetProvider.readSnippets(`${this.directory}/${file}`))
         ));
         if (!settings.i18n) {
             this.snippets = this.snippets.map(snippet => {

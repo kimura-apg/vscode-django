@@ -1,52 +1,127 @@
-'use strict'
-
-import { ExtensionContext, languages } from 'vscode';
-import { TemplatePathProvider } from './providers/definitionProvider'
+import { type ExtensionContext, languages } from "vscode";
+import { TemplatePathProvider } from "./providers/definitionProvider";
 import {
-    DjangoAdminCompletionItemProvider,
-    DjangoFormCompletionItemProvider,
-    DjangoManagerCompletionItemProvider,
-    DjangoMigrationCompletionItemProvider,
-    DjangoModelCompletionItemProvider,
-    DjangoPythonCompletionItemProvider,
-    DjangoViewCompletionItemProvider,
-    DjangoTemplatetagsCompletionItemProvider,
-    DjangoUrlCompletionItemProvider,
-} from './completions/completionItemProvider'
-import { postInitHook, SnippetProvider } from './utils';
+  DjangoAdminCompletionItemProvider,
+  DjangoFormCompletionItemProvider,
+  DjangoManagerCompletionItemProvider,
+  DjangoMigrationCompletionItemProvider,
+  DjangoModelCompletionItemProvider,
+  DjangoPythonCompletionItemProvider,
+  DjangoViewCompletionItemProvider,
+  DjangoTemplatetagsCompletionItemProvider,
+  DjangoUrlCompletionItemProvider,
+} from "./completions/completionItemProvider";
+import { postInitHook, SnippetProvider } from "./utils";
+import { TemplateHoverProvider } from "./providers/templateHoverProvider";
 
 export async function activate(context: ExtensionContext): Promise<void> {
-    const snippetProvider = new SnippetProvider(context.extensionUri);
+  console.log("Django Snippets is now active!");
 
-    const definitions = new TemplatePathProvider()
-    context.subscriptions.push(languages.registerDefinitionProvider(definitions.selector, definitions))
+  const snippetProvider = new SnippetProvider(context.extensionUri);
 
-    const djangoPythonSnippets = new DjangoPythonCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoPythonSnippets.selector, djangoPythonSnippets))
+  const definitions = new TemplatePathProvider();
+  context.subscriptions.push(
+    languages.registerDefinitionProvider(definitions.selector, definitions),
+  );
 
-    const djangoAdminSnippets = new DjangoAdminCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoAdminSnippets.selector, djangoAdminSnippets))
+  const djangoPythonSnippets = new DjangoPythonCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoPythonSnippets.selector,
+      djangoPythonSnippets,
+    ),
+  );
 
-    const djangoFormSnippets = new DjangoFormCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoFormSnippets.selector, djangoFormSnippets))
+  const djangoAdminSnippets = new DjangoAdminCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoAdminSnippets.selector,
+      djangoAdminSnippets,
+    ),
+  );
 
-    const djangoManagerSnippets = new DjangoManagerCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoManagerSnippets.selector, djangoManagerSnippets))
+  const djangoFormSnippets = new DjangoFormCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoFormSnippets.selector,
+      djangoFormSnippets,
+    ),
+  );
 
-    const djangoMigrationSnippets = new DjangoMigrationCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoMigrationSnippets.selector, djangoMigrationSnippets))
+  const djangoManagerSnippets = new DjangoManagerCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoManagerSnippets.selector,
+      djangoManagerSnippets,
+    ),
+  );
 
-    const djangoModelSnippets = new DjangoModelCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoModelSnippets.selector, djangoModelSnippets))
+  const djangoMigrationSnippets = new DjangoMigrationCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoMigrationSnippets.selector,
+      djangoMigrationSnippets,
+    ),
+  );
 
-    const djangoViewSnippets = new DjangoViewCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoViewSnippets.selector, djangoViewSnippets))
+  const djangoModelSnippets = new DjangoModelCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoModelSnippets.selector,
+      djangoModelSnippets,
+    ),
+  );
 
-    const djangoTemplatetagsSnippets = new DjangoTemplatetagsCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoTemplatetagsSnippets.selector, djangoTemplatetagsSnippets))
+  const djangoViewSnippets = new DjangoViewCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoViewSnippets.selector,
+      djangoViewSnippets,
+    ),
+  );
 
-    const djangoUrlSnippets = new DjangoUrlCompletionItemProvider(snippetProvider)
-    context.subscriptions.push(languages.registerCompletionItemProvider(djangoUrlSnippets.selector, djangoUrlSnippets))
+  const djangoTemplatetagsSnippets =
+    new DjangoTemplatetagsCompletionItemProvider(snippetProvider);
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoTemplatetagsSnippets.selector,
+      djangoTemplatetagsSnippets,
+    ),
+  );
 
-    postInitHook();
+  const djangoUrlSnippets = new DjangoUrlCompletionItemProvider(
+    snippetProvider,
+  );
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      djangoUrlSnippets.selector,
+      djangoUrlSnippets,
+    ),
+  );
+
+  context.subscriptions.push(
+    languages.registerHoverProvider(
+      {
+        scheme: "file",
+        language: "django-html",
+      },
+      new TemplateHoverProvider(),
+    ),
+  );
+
+  postInitHook();
 }
