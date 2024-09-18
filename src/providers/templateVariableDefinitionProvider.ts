@@ -6,6 +6,7 @@ import {
   Position,
   type ProviderResult,
   type TextDocument,
+  Location,
 } from "vscode";
 
 export class TemplateVariableDefinitionProvider implements DefinitionProvider {

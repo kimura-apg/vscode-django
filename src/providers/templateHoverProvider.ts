@@ -6,7 +6,6 @@ import {
   type ProviderResult,
   type TextDocument,
 } from "vscode";
-import * as path from "path";
 
 export class TemplateHoverProvider implements HoverProvider {
   provideHover(
