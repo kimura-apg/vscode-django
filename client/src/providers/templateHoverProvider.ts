@@ -25,7 +25,7 @@ export class TemplateHoverProvider implements HoverProvider {
     console.log(document);
 
     const word = document.getText(wordRange);
-    const fileName = document.fileName.replace(/^.*[\\\/]/, "");
+    const fileName = documend.fileName.replace(/^.*[\\\/]/, "");
     // Replace {{ variable }} to variable
     const variableName = word.replace(/{{\s*|\s*}}/g, "");
 
